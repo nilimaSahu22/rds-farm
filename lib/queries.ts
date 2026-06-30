@@ -1,5 +1,5 @@
 export const propertiesQuery = `
-  *[_type == "property"] | order(_createdAt asc) {
+  *[_type == "property" && !(_id in path("drafts.**"))] | order(_createdAt asc) {
     _id,
     name,
     "slug": slug.current,
@@ -18,7 +18,7 @@ export const propertiesQuery = `
 `
 
 export const activeOffersQuery = `
-  *[_type == "offer" && isActive == true] | order(_createdAt asc) {
+  *[_type == "offer" && isActive == true && !(_id in path("drafts.**"))] | order(_createdAt asc) {
     _id,
     title,
     description,
@@ -30,7 +30,7 @@ export const activeOffersQuery = `
 `
 
 export const activeTestimonialsQuery = `
-  *[_type == "testimonial" && isActive == true] {
+  *[_type == "testimonial" && isActive == true && !(_id in path("drafts.**"))] {
     _id,
     name,
     property,
@@ -40,7 +40,7 @@ export const activeTestimonialsQuery = `
 `
 
 export const siteSettingsQuery = `
-  *[_type == "siteSettings"][0] {
+  *[_type == "siteSettings" && !(_id in path("drafts.**"))][0] {
     phone,
     whatsappNumber,
     email,
@@ -54,7 +54,7 @@ export const siteSettingsQuery = `
 `
 
 export const blogPostsQuery = `
-  *[_type == "blogPost"] | order(publishedAt desc) {
+  *[_type == "blogPost" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
