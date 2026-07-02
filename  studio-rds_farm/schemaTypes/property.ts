@@ -25,8 +25,7 @@ export const property = defineType({
       options: {
         list: [
           {title: 'Hotel + Restaurant', value: 'hotel'},
-          {title: 'RDS Farm', value: 'farm'},
-          {title: 'RDS Farm 2', value: 'farm2'},
+          {title: 'Farm / Resort', value: 'farm'},
         ],
         layout: 'radio',
       },

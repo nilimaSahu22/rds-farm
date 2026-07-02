@@ -57,6 +57,7 @@ export const galleriesQuery = `
   *[_type == "gallery" && !(_id in path("drafts.**"))] {
     _id,
     property-> {
+      _id,
       name,
       "slug": slug.current,
       propertyType

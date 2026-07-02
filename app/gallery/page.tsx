@@ -13,17 +13,21 @@ export const metadata = {
 export default async function GalleryPage() {
   const galleries = await client.fetch(galleriesQuery);
 
-  const hotelImages = galleries
-    .filter((g: any) => g.property?.propertyType === "hotel")
-    .flatMap((g: any) => g.images ?? []);
+  // Group images by property — works regardless of slug or name
+  const byProperty: Record<string, { name: string; images: any[] }> = {};
 
-  const farmImages = galleries
-    .filter((g: any) => g.property?.propertyType === "farm")
-    .flatMap((g: any) => g.images ?? []);
+  for (const gallery of galleries ?? []) {
+    const id = gallery.property?._id;
+    const name = gallery.property?.name;
+    if (!id || !name) continue;
 
-  const farm2Images = galleries
-    .filter((g: any) => g.property?.propertyType === "farm2")
-    .flatMap((g: any) => g.images ?? []);
+    if (!byProperty[id]) {
+      byProperty[id] = { name, images: [] };
+    }
+    byProperty[id].images.push(...(gallery.images ?? []));
+  }
+
+  const propertyGroups = Object.values(byProperty);
 
   return (
     <>
@@ -54,77 +58,36 @@ export default async function GalleryPage() {
       <section className="bg-[#1C1A17] py-24 px-4">
         <div className="max-w-7xl mx-auto">
 
-          {hotelImages.length > 0 && (
-            <div className="mb-16">
-              <p className="text-[#B8976A] uppercase tracking-[0.2em] text-xs mb-8 font-inter">
-                RD&apos;s Hotel
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {hotelImages.map((img: any, i: number) => (
-                  <div key={i} className="relative h-48 md:h-64 overflow-hidden group">
-                    <Image
-                      src={urlFor(img.asset).width(800).quality(80).url()}
-                      alt={img.alt || img.caption || "RD's Hotel"}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {farmImages.length > 0 && (
-            <>
-              <div className="border-t border-[#F5EFE4]/10 mb-16" />
-              <div className="mb-16">
-                <p className="text-[#B8976A] uppercase tracking-[0.2em] text-xs mb-8 font-inter">
-                  RDS Farm
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {farmImages.map((img: any, i: number) => (
-                    <div key={i} className="relative h-48 md:h-64 overflow-hidden group">
-                      <Image
-                        src={urlFor(img.asset).width(800).quality(80).url()}
-                        alt={img.alt || img.caption || "RDS Farm"}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {farm2Images.length > 0 && (
-            <>
-              <div className="border-t border-[#F5EFE4]/10 mb-16" />
-              <div>
-                <p className="text-[#B8976A] uppercase tracking-[0.2em] text-xs mb-8 font-inter">
-                  RDS Farm 2
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {farm2Images.map((img: any, i: number) => (
-                    <div key={i} className="relative h-48 md:h-64 overflow-hidden group">
-                      <Image
-                        src={urlFor(img.asset).width(800).quality(80).url()}
-                        alt={img.alt || img.caption || "RDS Farm 2"}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {hotelImages.length === 0 && farmImages.length === 0 && farm2Images.length === 0 && (
+          {propertyGroups.length === 0 && (
             <p className="text-[#F5EFE4]/40 text-center py-24 font-inter">
               No gallery images added yet.
             </p>
           )}
+
+          {propertyGroups.map((group, index) => (
+            <div key={group.name}>
+              {index > 0 && (
+                <div className="border-t border-[#F5EFE4]/10 mb-16" />
+              )}
+              <div className="mb-16">
+                <p className="text-[#B8976A] uppercase tracking-[0.2em] text-xs mb-8 font-inter">
+                  {group.name}
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {group.images.map((img: any, i: number) => (
+                    <div key={i} className="relative h-48 md:h-64 overflow-hidden group">
+                      <Image
+                        src={urlFor(img.asset).width(800).quality(80).url()}
+                        alt={img.alt || img.caption || group.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
 
         </div>
       </section>
