@@ -31,6 +31,16 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
   const isHotel = property.propertyType === "hotel";
   const whatsapp = property.whatsappNumber ?? "919876543210";
 
+  // Extract plain text paragraphs from portable text aboutBody, fall back to description
+  const aboutParagraphs: string[] = property.aboutBody
+    ? (property.aboutBody as any[])
+        .filter((b: any) => b._type === "block")
+        .map((b: any) => (b.children ?? []).map((c: any) => c.text ?? "").join(""))
+        .filter((s: string) => s.trim().length > 0)
+    : property.description
+    ? [property.description]
+    : [];
+
   const heroImage = property.heroImage
     ? urlFor(property.heroImage).width(1920).quality(85).url()
     : "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1920&q=80";
@@ -80,9 +90,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             >
               {property.aboutTitle ?? property.name}
             </h2>
-            <p className="text-[#7A6F62] font-inter leading-relaxed mb-8">
-              {property.description ?? ""}
-            </p>
+            <div className="mb-8 space-y-4">
+              {aboutParagraphs.map((para, i) => (
+                <p key={i} className="text-[#7A6F62] font-inter leading-relaxed">
+                  {para}
+                </p>
+              ))}
+            </div>
             <a
               href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(`I'd like to inquire about ${property.name}`)}`}
               target="_blank"
