@@ -31,6 +31,18 @@ export const blogPost = defineType({
       initialValue: () => new Date().toISOString(),
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      description: 'e.g. Weddings, Corporate, Venues, Dining, Travel',
+    }),
+    defineField({
+      name: 'readTime',
+      title: 'Read Time',
+      type: 'string',
+      description: 'e.g. "5 min read"',
+    }),
+    defineField({
       name: 'seoDescription',
       title: 'SEO Meta Description',
       type: 'text',

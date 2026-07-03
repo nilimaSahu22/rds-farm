@@ -49,6 +49,11 @@ export const siteSettingsQuery = `
     address,
     instagramUrl,
     facebookUrl,
+    experiences[] {
+      title,
+      description,
+      image
+    },
     heroImage,
     heroEyebrow,
     heroHeadline,
@@ -143,6 +148,29 @@ export const blogPostsQuery = `
     "slug": slug.current,
     coverImage,
     publishedAt,
+    category,
+    readTime,
     seoDescription
   }
+`
+
+export const blogPostBySlugQuery = `
+  *[_type == "blogPost" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    coverImage,
+    publishedAt,
+    category,
+    readTime,
+    seoDescription,
+    body[] {
+      ...,
+      _type == "image" => { ..., asset-> }
+    }
+  }
+`
+
+export const allBlogSlugsQuery = `
+  *[_type == "blogPost" && !(_id in path("drafts.**"))]{ "slug": slug.current }
 `
