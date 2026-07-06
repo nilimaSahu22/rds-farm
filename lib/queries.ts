@@ -18,7 +18,7 @@ export const propertiesQuery = `
 `
 
 export const activeOffersQuery = `
-  *[_type == "offer" && isActive == true && !(_id in path("drafts.**"))] | order(_createdAt asc) {
+  *[_type == "offer" && isActive == true && (!defined(validUntil) || validUntil >= now()) && !(_id in path("drafts.**"))] | order(_createdAt asc) {
     _id,
     title,
     description,
