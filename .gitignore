@@ -21,3 +21,13 @@ yarn-error.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# OpenNext
+.open-next
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+
+!.env.example
