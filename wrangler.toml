@@ -3,6 +3,10 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 main = ".open-next/worker.js"
 
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
 [vars]
 NEXT_PUBLIC_SANITY_PROJECT_ID = "i203g7ij"
 NEXT_PUBLIC_SANITY_DATASET = "production"
