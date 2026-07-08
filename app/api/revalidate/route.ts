@@ -11,9 +11,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const type = body._type
 
+  // shared layout (header nav, footer) is cached per-route, so every
+  // event must revalidate it or pages drift out of sync on their own
+  // independent ISR clocks
+  revalidatePath('/', 'layout')
+
   switch (type) {
     case 'property':
-      revalidatePath('/', 'layout')       // header nav updates
       revalidatePath('/')                  // homepage property cards
       revalidatePath('/[slug]', 'page')    // all property pages
       revalidatePath('/gallery')           // gallery groups by property name
@@ -37,11 +41,9 @@ export async function POST(req: NextRequest) {
       revalidatePath('/blog/[slug]', 'page')
       break
     case 'siteSettings':
-      revalidatePath('/', 'layout')        // footer, header WhatsApp, CTABanner
       revalidatePath('/')                  // homepage hero, about, experiences, map
       break
     default:
-      revalidatePath('/', 'layout')
       revalidatePath('/')
   }
 
