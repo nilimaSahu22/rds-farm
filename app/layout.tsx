@@ -47,10 +47,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Don't swallow fetch failures into an empty/null fallback: that would get
-  // baked into the ISR cache as if it were a valid render, silently blanking
-  // the nav/footer for the full revalidate window. Log and rethrow instead,
-  // so Next.js keeps serving the last known-good cached page.
+  // Don't swallow fetch failures into an empty/null fallback: that would
+  // silently render a blank nav/footer instead of surfacing the error.
+  // Log and rethrow so a Sanity outage shows as a clear error, not broken nav.
   const [siteSettings, propertyLinks] = await Promise.all([
     client.fetch(siteSettingsQuery).catch((err) => {
       console.error("Failed to fetch siteSettingsQuery", err);

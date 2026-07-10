@@ -5,7 +5,7 @@ import { client, urlFor } from "@/lib/sanity";
 import { activeOffersQuery, siteSettingsQuery } from "@/lib/queries";
 import type { OfferItem } from "@/components/ui/OffersPopup";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Offers | RD's Venues",

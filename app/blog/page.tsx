@@ -3,7 +3,7 @@ import Link from "next/link";
 import { client, urlFor } from "@/lib/sanity";
 import { blogPostsQuery } from "@/lib/queries";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Blog | RD's Venues",

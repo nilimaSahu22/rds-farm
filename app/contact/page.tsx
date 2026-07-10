@@ -3,7 +3,7 @@ import CTABanner from "@/components/sections/CTABanner";
 import { client } from "@/lib/sanity";
 import { siteSettingsQuery } from "@/lib/queries";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Contact | RD's Venues",
